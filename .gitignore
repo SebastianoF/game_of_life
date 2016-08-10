@@ -1,3 +1,4 @@
 workspace
 HelloWorld
 *.pyc
+.idea
