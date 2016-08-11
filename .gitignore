@@ -4,4 +4,5 @@ cpp_build
 *.log
 *.synctex.gz
 *.pyc
+zz_*
 .idea
