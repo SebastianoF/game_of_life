@@ -1,4 +1,4 @@
-workspace
-HelloWorld
+data
+cpp_build
 *.pyc
 .idea
