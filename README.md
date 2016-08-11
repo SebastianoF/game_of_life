@@ -75,7 +75,7 @@ If everything works to play a game of life initialized with a random seed, type
 This command will create a game, as a sequence of numbered states stored in .txt format inside the newly created folder *data*.  
 
 
-# How to run (once boost-python is installed)
+# Documentations
 
 A documentation with the results and the comparisons between the various method is available in the folder *report*.
 
