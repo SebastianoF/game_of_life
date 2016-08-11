@@ -1,4 +1,7 @@
 data
 cpp_build
+*.aux
+*.log
+*.synctex.gz
 *.pyc
 .idea
