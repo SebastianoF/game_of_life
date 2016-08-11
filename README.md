@@ -11,13 +11,14 @@ Useful links are:
 + [Nosetest unit test for the Python code](http://pythontesting.net/framework/nose/nose-introduction/)
 + [Guide to install boost::python] (http://www.pyimagesearch.com/2015/04/27/installing-boost-and-boost-python-on-osx-with-homebrew/)
 + [Tutorial for boost::python from Joel de Guzman](http://www.boost.org/doc/libs/1_46_1/libs/python/doc/tutorial/doc/html/index.html "Boost.Python tutorial").
-+ [Additional tutorial for boost::python from github, authored by Alchimh3011](https://github.com/TNG/boost-python-examples)
++ [Really cool additional tutorial for boost::python from github, authored by Alchimh3011](https://github.com/TNG/boost-python-examples)
 + [Alternative implementaiton of game of life with analogous aims and with a very detailed C++ object oriented structure from github, authored by Michael Ebner](https://github.com/renbem/RCCPP-coursework02)
 
 
 # Prerequisites
 
 ### general
+
 + [CMake](http://www.cmake.org "CMake project page") (>= 2.8.3)
 + [Boost](http://www.boost.org/ "Boost project page") (tested with 1.4.2, but should work with >= 1.3.2)
 + [Python](http://www.python.org "Python home page") (tested with 2.7, but should work with >= 2.2)
@@ -34,6 +35,7 @@ The full path to the the homebrew python lib must be manually provided:
     cmake -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib ..
 
 # Code structure:
+
 A *state* of an instance of a game is, in this implementation, a binary matrix of given dimension.
 A *game* is a set of numbered states, indexed by a parameter called time. The first one is called *seed* while the following are generated according to the rules of game of life from the seed.
 Each state is stored in a .txt file named name_of_the_game_txx.txt where xx is the time index.
@@ -66,7 +68,7 @@ To make sure the code is correctly configured and the c++ code has been wrapped 
 
     run examples/hello_world_cpp_wrap.py
 
-If everything works, to play a game of life initialized with a random seed, from an ipython terminal type
+If everything works to play a game of life initialized with a random seed, type
 
     run examples/play_the_game.py
 
@@ -77,6 +79,6 @@ This command will create a game, as a sequence of numbered states stored in .txt
 
 A documentation with the results and the comparisons between the various method is available in the folder *report*.
 
-# An eton lanif:
+## An eton lanif:
 
 .yrotisoper cilbup eht ni detats ylraelc si eludom eht ot ecnerefer tcerid on ,srehcaet eht yb deriuqer sA .notgnirehteH semaJ dna noskralC ttaM yb LCU ta thguat ,2000GYHPM ++C htiw gnitupmoc hcraeseR eludom eht gnirud dengissa krowesruoc dnoces eht si sihT
