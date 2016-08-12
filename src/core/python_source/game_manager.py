@@ -114,10 +114,10 @@ class GameManager(StateManager):
 
         anim = animation.ArtistAnimation(fig, ims, interval=200, repeat_delay=200, blit=False)
 
-        if save:
-            # Set up formatting for the movie files
-            Writer = animation.writers['ffmpeg']
-            writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
-            anim.save(self.path_to_seed[-4] + '.mp4', writer=writer)
-
         plt.show()
+
+        if save:
+
+            movie_path = self.path_to_seed[:-4] + '.mp4'
+            anim.save(movie_path, writer=animation.FFMpegWriter())
+            print 'Movie saved as' + movie_path
