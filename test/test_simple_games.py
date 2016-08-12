@@ -34,7 +34,6 @@ def test_still_life_block_in_1_time_step():
     usm.erase_the_game(erase_seed=False, safe_erase=False)
 
 
-
 def test_gosper_glider_gun():
 
     usm = GameManager(data_test_folder, 'glider_gun', 2)
