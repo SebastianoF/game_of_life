@@ -77,7 +77,7 @@ if __name__ == "__main__":
     # generate the game in the game folder specified:
     usm.generate_the_game()
 
-    usm.see_the_game(save=True)
+    usm.see_the_game(save=False)
 
     # clean the data folder and the saved movie:
-    #usm.erase_the_game(erase_seed=True, safe_erase=False)
+    usm.erase_the_game(erase_seed=True, safe_erase=False)
