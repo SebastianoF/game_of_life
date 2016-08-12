@@ -11,8 +11,12 @@ class StateManager(object):
     """
 
     def __init__(self, path_to_game_folder, game_name):
+
         self.path_to_game_folder = path_to_game_folder
         self.game_name = game_name
+
+        self.seed_name = str(self.game_name) + '_t0' + '.txt'
+        self.path_to_seed = os.path.join(path_to_game_folder, self.seed_name)
 
     def loader(self, time_state):
         """
@@ -35,7 +39,7 @@ class StateManager(object):
         with xxx=game_name and yyy as time_state
         """
         ''' # commented to spare time:
-        if not len(input_array_state.shape) == 2:
+        if not input_array_state.ndim == 2:
             raise IOError('Input state must be 2-dimensional.')
         if not input_array_state.dtype == np.uint8:
             raise IOError('Type of the input array must be uint8 - usinged integer 8 bit.')
@@ -60,18 +64,26 @@ class StateManager(object):
         print('Random state generated.')
         self.saver(st, time_state=0)
 
-    def erase_the_game(self, erase_seed=True):
+    def erase_the_game(self, erase_seed=True, safe_erase=True):
 
-        if erase_seed:
-            sure = raw_input("Are you sure you want to erase the game, including the seed (y/n): ")
+        if safe_erase:
+            if erase_seed:
+                sure = raw_input("Are you sure you want to erase the game, including the seed (y/n): ")
+            else:
+                sure = raw_input("Are you sure you want to erase the game (y/n): ")
         else:
-            sure = raw_input("Are you sure you want to erase the game (y/n): ")
+            sure = 'y'
 
         if sure.lower() == 'n':
             return
         elif sure.lower() == 'y':
-            # all the .txt files in the path_to_game_folder that starts with game name will be erased
-            os.remove(os.path.join(self.path_to_game_folder, self.game_name + '*'))
+            for name_state in os.listdir(self.path_to_game_folder):
+                if name_state.startswith(self.game_name):
+                    if erase_seed:
+                        os.remove(os.path.join(self.path_to_game_folder, name_state))
+                    elif not name_state == self.seed_name:
+                        os.remove(os.path.join(self.path_to_game_folder, name_state))
+
             print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
 
         else:

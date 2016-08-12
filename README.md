@@ -75,10 +75,10 @@ If everything works to play a game of life initialized with a random seed, type
 This command will create a game, as a sequence of numbered states stored in .txt format inside the newly created folder *data*.  
 
 
-# Documentations
+## Documentation
 
 A documentation with the results and the comparisons between the various method is available in the folder *report*.
 
-## An eton lanif:
+## :eton lanif A
 
 .yrotisoper cilbup eht ni detats ylraelc si eludom eht ot ecnerefer tcerid on ,srehcaet eht yb deriuqer sA .notgnirehteH semaJ dna noskralC ttaM yb LCU ta thguat ,2000GYHPM ++C htiw gnitupmoc hcraeseR eludom eht gnirud dengissa krowesruoc dnoces eht si sihT
