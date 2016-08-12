@@ -1,6 +1,11 @@
 import numpy as np
 import os
 
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
 from src.utils.state_manager import StateManager
 from src.utils.aux_functions import cell_degree
 
@@ -54,7 +59,7 @@ class GameManager(StateManager):
 
         self.saver(new_state_arr, time_state=time_state + 1)
 
-    def generate_game(self, x_dim=200, y_dim=200, ones_percentage=1./10, regenerate_seed=False):
+    def generate_the_game(self, x_dim=200, y_dim=200, ones_percentage=1./10, regenerate_seed=False):
 
         if not regenerate_seed and not os.path.isfile(self.path_to_seed):
             raise IOError('Game has no seed generated')
@@ -68,13 +73,51 @@ class GameManager(StateManager):
         for t in range(self.max_update_time):
             self.update_state_once(t)
 
+    def erase_the_game(self, erase_seed=True, safe_erase=True):
 
+        if safe_erase:
+            if erase_seed:
+                sure = raw_input("Are you sure you want to erase the game, including the seed (y/n): ")
+            else:
+                sure = raw_input("Are you sure you want to erase the game (y/n): ")
+        else:
+            sure = 'y'
 
-'''
-if state_arr[i,j] == 1: # cell is alive
-    if deg_arr[i, j] < 2: new_state_arr[i, j] = 0
-    if 2 <= deg_arr[i, j] <= 3: new_state_arr[i, j] = 1
-    if deg_arr[i, j] > 3: new_state_arr[i, j] = 0
-else:  # cell is dead
-    if deg_arr[i, j] == 3: new_state_arr[i, j] = 1
-'''
+        if sure.lower() == 'n':
+            return
+        elif sure.lower() == 'y':
+            for name_state in os.listdir(self.path_to_game_folder):
+                if name_state.startswith(self.game_name):
+                    if erase_seed:
+                        os.remove(os.path.join(self.path_to_game_folder, name_state))
+                    elif not name_state == self.seed_name:
+                        os.remove(os.path.join(self.path_to_game_folder, name_state))
+
+            print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
+
+        else:
+            print 'input not understood, game not erased. Please write y or n next time.'
+
+    def see_the_game(self, save=False):
+
+        fig = plt.figure(1, figsize=(7, 7), dpi=100)
+        fig.subplots_adjust(left=0.04, right=0.98, top=0.92, bottom=0.08)
+        ax  = fig.add_subplot(111)
+        plt.setp(ax.get_xticklabels(), visible=False)
+        plt.setp(ax.get_yticklabels(), visible=False)
+
+        ims = []
+        for k in range(self.max_update_time+1):
+            arr = self.loader(k)
+            im = plt.imshow(arr, cmap='Greys', interpolation='nearest', animated=True)
+            ims.append([im])
+
+        anim = animation.ArtistAnimation(fig, ims, interval=200, repeat_delay=200, blit=False)
+
+        if save:
+            # Set up formatting for the movie files
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+            anim.save(self.path_to_seed[-4] + '.mp4', writer=writer)
+
+        plt.show()

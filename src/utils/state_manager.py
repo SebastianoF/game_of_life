@@ -1,6 +1,11 @@
 import numpy as np
 import os
 
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
 
 class StateManager(object):
     """
@@ -64,27 +69,22 @@ class StateManager(object):
         print('Random state generated.')
         self.saver(st, time_state=0)
 
-    def erase_the_game(self, erase_seed=True, safe_erase=True):
+    def see_the_state(self, time_state):
+        """
+        see the state at the given time point
+        :param time_state: given time point.
+        :return:
+        """
 
-        if safe_erase:
-            if erase_seed:
-                sure = raw_input("Are you sure you want to erase the game, including the seed (y/n): ")
-            else:
-                sure = raw_input("Are you sure you want to erase the game (y/n): ")
-        else:
-            sure = 'y'
+        fig = plt.figure(1, figsize=(7, 7), dpi=100)
+        fig.subplots_adjust(left=0.04, right=0.98, top=0.92, bottom=0.08)
+        ax  = fig.add_subplot(111)
 
-        if sure.lower() == 'n':
-            return
-        elif sure.lower() == 'y':
-            for name_state in os.listdir(self.path_to_game_folder):
-                if name_state.startswith(self.game_name):
-                    if erase_seed:
-                        os.remove(os.path.join(self.path_to_game_folder, name_state))
-                    elif not name_state == self.seed_name:
-                        os.remove(os.path.join(self.path_to_game_folder, name_state))
+        pic = ax.imshow(self.loader(time_state=time_state), cmap='Greys', interpolation='nearest')
 
-            print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
+        plt.setp(ax.get_xticklabels(), visible=False)
+        plt.setp(ax.get_yticklabels(), visible=False)
 
-        else:
-            print 'input not understood, game not erased. Please write y or n next time.'
+        #plt.colorbar(aa, orientation='vertical')  # yes indeed, black are 1, white are zeros
+
+        plt.show()

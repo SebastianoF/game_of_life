@@ -21,7 +21,7 @@ def test_still_life_block_in_1_time_step():
     usm.saver(m_0, 0)
 
     # generate the game
-    usm.generate_game()
+    usm.generate_the_game()
 
     # check that after 2 iteration the seed is the block
     m_test = m_0[:]; m_test[1,1] = 1
