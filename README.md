@@ -70,9 +70,17 @@ To make sure the code is correctly configured and the c++ code has been wrapped 
 
 If everything works to play a game of life initialized with a random seed, type
 
-    run examples/play_the_game.py
+    run examples/play_a_game.py
 
 This command will create a game, as a sequence of numbered states stored in .txt format inside the newly created folder *data*.  
+
+![Output sample](https://github.com/SebastianoF/game_of_life/blob/master/sample_game_of_life.gif)
+
+
+To produce the example in the figure above run the command 
+
+	run examples/play_another_game.py	
+
 
 
 ## Documentation

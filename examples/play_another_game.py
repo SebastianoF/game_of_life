@@ -10,7 +10,7 @@ if __name__ == "__main__":
     path_to_game_folder = os.path.join(project_path, 'data')
 
     game_name = 'gun_'
-    time_points = 300
+    time_points = 70
 
     # open an instance of a Game manager
     usm = GameManager(path_to_game_folder, game_name, time_points)
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     # generate the game in the game folder specified:
     usm.generate_the_game()
 
-    usm.see_the_game(save=False)
+    usm.see_the_game(save=True)
 
     # clean the data folder and the saved movie:
-    usm.erase_the_game(erase_seed=True, safe_erase=False)
+    usm.erase_the_game(erase_seed=True, safe_erase=False, erase_movie=False)

@@ -73,7 +73,7 @@ class GameManager(StateManager):
         for t in range(self.max_update_time):
             self.update_state_once(t)
 
-    def erase_the_game(self, erase_seed=True, safe_erase=True):
+    def erase_the_game(self, erase_seed=True, safe_erase=True, erase_movie=True):
 
         if safe_erase:
             if erase_seed:
@@ -88,9 +88,12 @@ class GameManager(StateManager):
         elif sure.lower() == 'y':
             for name_state in os.listdir(self.path_to_game_folder):
                 if name_state.startswith(self.game_name):
-                    if erase_seed:
-                        os.remove(os.path.join(self.path_to_game_folder, name_state))
-                    elif not name_state == self.seed_name:
+
+                    if not erase_seed and name_state == self.seed_name:
+                        pass
+                    elif not erase_movie and name_state.endswith('.mp4'):
+                        pass
+                    else:
                         os.remove(os.path.join(self.path_to_game_folder, name_state))
 
             print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
@@ -117,7 +120,8 @@ class GameManager(StateManager):
         plt.show()
 
         if save:
-
             movie_path = self.path_to_seed[:-4] + '.mp4'
+            print movie_path
+
             anim.save(movie_path, writer=animation.FFMpegWriter())
             print 'Movie saved as' + movie_path
