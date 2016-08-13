@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8.3)
 set(PROJECT_NAME "game_of_life")
 project(${PROJECT_NAME})
 
-
 # Make sure Git is available.
 
 find_package(Git REQUIRED)
@@ -16,13 +15,6 @@ endif()
 #FIND_PACKAGE(Eigen REQUIRED)
 #INCLUDE_DIRECTORIES(${Eigen_INCLUDE_DIR})
 #MESSAGE("Loading Eigen from ${Eigen_INCLUDE_DIR}")
-
-#SET(Eigen_DIR /Users/sebastiano/sw_libraries/eigen/eigen-build)
-#INCLUDE_DIRECTORIES(${Eigen_DIR})
-
-#set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-#find_package(Eigen REQUIRED)
-#include_directories(EIGEN_INCLUDE_DIR)
 
 set(Eigen_INCLUDE_DIRS /Users/sebastiano/sw_libraries/eigen-lib/cmake/FindEigen3.cmake)
 include_directories(${Eigen_INCLUDE_DIRS})
@@ -43,4 +35,3 @@ LINK_LIBRARIES(${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 ADD_SUBDIRECTORY(HelloWorld)
 ADD_SUBDIRECTORY(HelloBox)
-
