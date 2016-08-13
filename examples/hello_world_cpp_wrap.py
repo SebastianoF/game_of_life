@@ -1,3 +1,7 @@
+"""
+Hello world module to check if the libraries are all in place and the wrappers
+of boost:::python are working.
+"""
 import sys
 import os
 
@@ -16,9 +20,12 @@ print 'This "' + hello.greet() + '" is from a C++ piece of code, build in the fo
 
 my_box = hello_box.Box()
 
-print my_box.height
 my_box.height = 0.5
-print my_box.height
+my_box.width = 1.5
+my_box.length = 2.5
 
-my_box.path_to_file = "asdf_fdsa"
-print my_box.path_to_file
+my_box.file_path = os.path.join(project_path, 'data', 'box_info.txt')
+
+my_box.save_info()
+
+print "Check the file box_info.txt to see if everything works."

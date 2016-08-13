@@ -73,20 +73,30 @@ class Box
         }
         
         // extra
-
         float get_surface() {
             return 2 * m_height * m_width + 2 * m_width * m_length + 2 * m_length * m_height;
         }
 
         float get_volume() {
-            return m_height * m_width + m_width;
+            return m_height * m_width * m_length;
         }
-
 
         // viewer
         std::string get_info() {
-            std::string s = "info here";
+            std::string s = "Box size = " + std::to_string(m_height) + " x "
+                             +  std::to_string(m_width) + " x "
+                             +  std::to_string(m_length) + " \n"
+                             + "Volume = " + std::to_string(get_volume()) + "\n"
+                             + "Surface = " + std::to_string(get_surface()) + "\n";
             return s;
+        }
+
+        // save specs:
+        void save_info(){
+            std::ofstream file_where_to_save;
+            file_where_to_save.open(path_and_filename, std::ios::out | std::ios::app | std::ios::binary);
+            file_where_to_save << Box::get_info() ;
+            file_where_to_save.close();
         }
 
 };
@@ -106,9 +116,10 @@ BOOST_PYTHON_MODULE(hello_box)
         .add_property("height", &Box::get_height, &Box::set_height)
         .add_property("width", &Box::get_width, &Box::set_width)
         .add_property("length", &Box::get_length, &Box::set_length)
-        .add_property("surface", &Box::get_surface)
-        .add_property("volume", &Box::get_volume)
-        .add_property("info", &Box::get_info)
+        .def("surface", &Box::get_surface)
+        .def("volume", &Box::get_volume)
+        .def("info", &Box::get_info)
+        .def("save_info", &Box::save_info)
         ;
 
 }
