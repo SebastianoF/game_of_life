@@ -1,1 +1,0 @@
-PYTHON_ADD_MODULE(member member.cpp)

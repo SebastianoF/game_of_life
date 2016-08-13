@@ -1,0 +1,1 @@
+PYTHON_ADD_MODULE(hello_box hello_box.cpp)

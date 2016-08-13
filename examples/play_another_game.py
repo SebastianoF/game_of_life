@@ -17,6 +17,7 @@ if __name__ == "__main__":
 
     # create and save the seed (state at time state 0) in the specified folder:
     m_0 = np.zeros([50, 30], dtype=np.uint8)
+
     m_0[1, 5] = 1
     m_0[1, 6] = 1
     m_0[2, 5] = 1
@@ -72,6 +73,7 @@ if __name__ == "__main__":
     m_0[40, 23] = 1
     m_0[40, 25] = 1
     m_0[41, 24] = 1
+
     usm.saver(m_0, time_state=0)  # the seed, state at time state 0, is saved in the folder specified
 
     # generate the game in the game folder specified:
