@@ -28,12 +28,11 @@ int positive_modulo(int i, int n) {
 int cell_degree(int i, int j, int x_dim, int y_dim, Eigen::MatrixXi state_arr) {
     
     int a = 0;
-    
+
     for (int x=-1; x<=1; x++){
         for (int y=-1; y<=1; y++) {
-            if (x != 0 && y != 0) {
+            if ( x != 0 || y != 0 ) {
                 a = a + state_arr(positive_modulo(x+i,x_dim), positive_modulo(y+j,y_dim));
-                
             }
         }
     }
@@ -127,9 +126,6 @@ class StateManager
                 file << state_arr << "\n";
             }
             file.close();
-
-            //std::cout << "File saved in " << std::endl;
-            //std::cout << state_path << std::endl;
         }
 
         // update state from array - plain version: 
@@ -172,7 +168,7 @@ class StateManager
 
             // update from array
             new_state = update_from_array(input_state);
-            
+
             //save
             saver(new_state, in_time + 1);
 

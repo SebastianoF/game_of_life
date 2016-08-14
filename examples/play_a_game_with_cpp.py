@@ -33,10 +33,10 @@ if __name__ == "__main__":
 
     # produce a seed with the python state manager
     sm_py = GameManager(path_to_game_folder=path_to_game_folder, game_name=game_name)
-    sm_py.erase_the_game(erase_seed=False, safe_erase=False)
+    sm_py.erase_the_game(erase_seed=True, safe_erase=False)
     sm_py.max_update_time = time_points
 
-    m_0 = np.zeros([20, 20], dtype=np.uint8)
+    m_0 = np.zeros([7, 7], dtype=np.uint8)
     m_0[2,2], m_0[3, 3], m_0[4, 1], m_0[4, 2], m_0[4, 3] = [1] * 5
 
     sm_py.saver(m_0, 0)
