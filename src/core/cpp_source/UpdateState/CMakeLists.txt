@@ -1,0 +1,1 @@
+PYTHON_ADD_MODULE(state_manager state_manager.cpp)

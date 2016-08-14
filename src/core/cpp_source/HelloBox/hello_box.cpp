@@ -55,7 +55,6 @@ class Box
             m_height = new_height;
         }
 
-
         float get_width() {
             return m_width;
         }
