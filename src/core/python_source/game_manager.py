@@ -31,13 +31,8 @@ class GameManager(StateManager):
 
         self.max_update_time = max_update_time
 
-    def update_state_once(self, time_state):
-        """
-        Update the state from state_time to state_time + 1
-        :param time_state:
-        :return: generate the next state in the game.
-        """
-        state_arr = self.loader(time_state=time_state)
+    @staticmethod
+    def update_from_array(state_arr):
 
         deg_arr = np.zeros_like(state_arr)
         x_dim, y_dim = deg_arr.shape
@@ -52,14 +47,22 @@ class GameManager(StateManager):
             for j in xrange(y_dim):
                 if state_arr[i, j] == 1 and 2 <= deg_arr[i, j] <= 3:  # cell is alive and survives
                     new_state_arr[i, j] = 1
-                if state_arr[i, j] == 0 and deg_arr[i, j] == 3:  # cell is dead and is the beloved of 3
+                if state_arr[i, j] == 0 and deg_arr[i, j] == 3:  # cell is dead and is the beloved of other 3 cells
                     new_state_arr[i, j] = 1
 
-        deg_arr, state_arr = None, None
+        return new_state_arr
 
+    def update_state_once(self, time_state):
+        """
+        Update the state from state_time to state_time + 1
+        :param time_state:
+        :return: generate the next state in the game.
+        """
+        state_arr = self.loader(time_state=time_state)
+        new_state_arr = self.update_from_array(state_arr)
         self.saver(new_state_arr, time_state=time_state + 1)
 
-    def generate_the_game(self, x_dim=200, y_dim=200, ones_percentage=1./10, regenerate_seed=False):
+    def generate_the_game(self, x_dim=200, y_dim=200, ones_percentage=1. / 10, regenerate_seed=False):
 
         if not regenerate_seed and not os.path.isfile(self.path_to_seed):
             raise IOError('Game has no seed generated')
@@ -122,6 +125,5 @@ class GameManager(StateManager):
         if save:
             movie_path = self.path_to_seed[:-4] + '.mp4'
             print movie_path
-
             anim.save(movie_path, writer=animation.FFMpegWriter())
             print 'Movie saved as' + movie_path

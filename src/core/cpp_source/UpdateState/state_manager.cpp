@@ -10,12 +10,27 @@ Tests are provided in the Python embedding, and performed with nosetests.
 
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <cstdlib>
 #include <stdlib.h>
 #include <iostream>
 #include <Eigen/Dense>
 
-#include <fstream>
+#define MAXBUFSIZE  ((int) 1e6)
+
+
+int cell_degree(int i, int j, int x_dim, int y_dim, Eigen::MatrixXi state_arr) {
+    
+    int a = 0;
+    for (int x=-1; x<=1; i++){
+        for (int y=-1; y<=1; i++){
+            if (x != 0 && y != 0)
+                a = a + state_arr((x+i)%x_dim, (y+j)%y_dim);
+        }
+    }
+    return a;
+}
+
 
 class StateManager
 {
@@ -26,12 +41,14 @@ class StateManager
     public:
 
         // constructors:
+
         StateManager() {
-            m_path_to_game_folder = "set the path";
-            m_game_name = "set the name game";
+            m_path_to_game_folder = "Path not defined.";
+            m_game_name = "Game name not defined.";
         }
 
         // getter and setter:
+        
         std::string get_path_to_game_folder() {
             return m_path_to_game_folder;
         }
@@ -48,15 +65,110 @@ class StateManager
             m_game_name = new_game_name;
         }
 
-        //update state: 
+        // load state:
 
-        void update_state(int i) {
+        Eigen::MatrixXi loader(int in_time) {
+            int cols = 0, rows = 0;
+            double buff[MAXBUFSIZE];
+
+            std::string state_path;
+            state_path =  m_path_to_game_folder + "/" + m_game_name + "_t" +  std::to_string(in_time) + ".txt";
+            
+            std::ifstream in_file;
+            in_file.open(state_path);
+            while (! in_file.eof())
+                {
+                std::string in_line;
+                getline(in_file, in_line);
+
+                int tmp_cols = 0;
+                std::stringstream stream(in_line);
+                while(! stream.eof())
+                    stream >> buff[cols*rows + tmp_cols++];
+
+                if (tmp_cols == 0)
+                    continue;
+
+                if (cols == 0)
+                    cols = tmp_cols;
+
+                rows++;
+                }
+
+            in_file.close();
+            rows--;
+
+            Eigen::MatrixXi result(rows, cols);
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    result(i,j) = buff[cols * i + j];
+
+            return result;
+        }
+        
+        // save state:
+
+        void saver(Eigen::MatrixXi state_arr, int in_time) {
+
+            std::string state_path;
+            state_path =  m_path_to_game_folder + "/" + m_game_name + "_t" +  std::to_string(in_time) + ".txt";
+
+            std::ofstream file(state_path.c_str());
+            if (file.is_open()) {
+                file << state_arr;
+            }
+            file.close();
+        }
+
+        // update state from array - plain version: 
+
+        Eigen::MatrixXi update_from_array(Eigen::MatrixXi state_arr) {
+            
+            int x_dim = state_arr.rows(), 
+                y_dim = state_arr.cols();
+
+            Eigen::MatrixXi deg_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
+            Eigen::MatrixXi new_state_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
+
+            for(int i; i<x_dim; i++) {
+                for(int j; j<y_dim; i++){
+                    deg_arr(i, j) = cell_degree(i, j, x_dim, y_dim, state_arr);
+                }
+            }
+
+            for(int i; i<x_dim; i++) {
+                for(int j; j<y_dim; i++){
+                    if (state_arr(i, j) == 1 && deg_arr(i, j) >= 2 && deg_arr(i, j) <= 3) // cell is alive and survives
+                        new_state_arr(i, j) = 1;
+                    if (state_arr(i, j) == 0 && deg_arr(i, j) == 3) // cell is dead and is the beloved of other 3 cells
+                        new_state_arr(i, j) = 1;
+                }
+            }
+            // remove this after testing:
             Eigen::MatrixXd m(2,2);
-            m(0,0) = i;
+            m(0,0) = 5;
             m(1,0) = 2.5;
             m(0,1) = -1;
             m(1,1) = m(1,0) + m(0,1);
             std::cout << m << std::endl;
+
+            return new_state_arr;
+        }
+
+        // update state once:
+
+        void update_state_once(int in_time) {
+            
+            Eigen::MatrixXi input_state;
+            Eigen::MatrixXi new_state;
+
+            // load state
+            input_state = loader(in_time);
+            // update from array
+            new_state = update_from_array(input_state);
+            //save
+            saver(new_state, in_time);
+
         }
 };
 
@@ -70,14 +182,10 @@ BOOST_PYTHON_MODULE(state_manager)
     class_<StateManager>("StateManager", init<>())
         .add_property("path_to_game_folder", &StateManager::get_path_to_game_folder, &StateManager::set_path_to_game_folder)
         .add_property("game_name", &StateManager::get_game_name, &StateManager::set_game_name)
-        .def("update_state", &StateManager::update_state)
+        .def("update_state_once", &StateManager::update_state_once)
+        .def("update_from_array", &StateManager::update_from_array)
+        .def("loader", &StateManager::loader)
+        .def("saver", &StateManager::saver)
         ;
 
 }
-
-
-
-
-
-
-
