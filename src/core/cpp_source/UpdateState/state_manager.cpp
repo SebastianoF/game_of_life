@@ -19,13 +19,22 @@ Tests are provided in the Python embedding, and performed with nosetests.
 #define MAXBUFSIZE  ((int) 1e6)
 
 
+// auxiliary functions:
+
+int positive_modulo(int i, int n) {
+    return (i % n + n) % n;
+}
+
 int cell_degree(int i, int j, int x_dim, int y_dim, Eigen::MatrixXi state_arr) {
     
     int a = 0;
-    for (int x=-1; x<=1; i++){
-        for (int y=-1; y<=1; i++){
-            if (x != 0 && y != 0)
-                a = a + state_arr((x+i)%x_dim, (y+j)%y_dim);
+    
+    for (int x=-1; x<=1; x++){
+        for (int y=-1; y<=1; y++) {
+            if (x != 0 && y != 0) {
+                a = a + state_arr(positive_modulo(x+i,x_dim), positive_modulo(y+j,y_dim));
+                
+            }
         }
     }
     return a;
@@ -115,9 +124,12 @@ class StateManager
 
             std::ofstream file(state_path.c_str());
             if (file.is_open()) {
-                file << state_arr;
+                file << state_arr << "\n";
             }
             file.close();
+
+            //std::cout << "File saved in " << std::endl;
+            //std::cout << state_path << std::endl;
         }
 
         // update state from array - plain version: 
@@ -130,27 +142,20 @@ class StateManager
             Eigen::MatrixXi deg_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
             Eigen::MatrixXi new_state_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
 
-            for(int i; i<x_dim; i++) {
-                for(int j; j<y_dim; i++){
+            for(int i=0; i < x_dim; i++) {
+                for(int j=0; j < y_dim; j++){
                     deg_arr(i, j) = cell_degree(i, j, x_dim, y_dim, state_arr);
                 }
             }
 
-            for(int i; i<x_dim; i++) {
-                for(int j; j<y_dim; i++){
+            for(int i=0; i<x_dim; i++) {
+                for(int j=0; j<y_dim; j++){
                     if (state_arr(i, j) == 1 && deg_arr(i, j) >= 2 && deg_arr(i, j) <= 3) // cell is alive and survives
                         new_state_arr(i, j) = 1;
                     if (state_arr(i, j) == 0 && deg_arr(i, j) == 3) // cell is dead and is the beloved of other 3 cells
                         new_state_arr(i, j) = 1;
                 }
             }
-            // remove this after testing:
-            Eigen::MatrixXd m(2,2);
-            m(0,0) = 5;
-            m(1,0) = 2.5;
-            m(0,1) = -1;
-            m(1,1) = m(1,0) + m(0,1);
-            std::cout << m << std::endl;
 
             return new_state_arr;
         }
@@ -164,10 +169,12 @@ class StateManager
 
             // load state
             input_state = loader(in_time);
+
             // update from array
             new_state = update_from_array(input_state);
+            
             //save
-            saver(new_state, in_time);
+            saver(new_state, in_time + 1);
 
         }
 };

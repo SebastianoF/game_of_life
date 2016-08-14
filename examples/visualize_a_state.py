@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     # initialize the state using an instance of the state manager:
     sm = StateManager(path_to_game_folder=path_to_game_folder, game_name=game_name)
-    sm.initialise_random(100, 100)
+    sm.initialise_random(10, 10)
 
     # see the initialized random state:
     sm.see_the_state(0)

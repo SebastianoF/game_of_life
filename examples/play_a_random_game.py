@@ -14,7 +14,7 @@ if __name__ == "__main__":
     usm = GameManager(path_to_game_folder, game_name, time_points)
 
     usm.erase_the_game(safe_erase=False, erase_seed=True)
-    usm.generate_the_game(x_dim=50, y_dim=50, regenerate_seed=True)
+    usm.generate_the_game(x_dim=10, y_dim=10, regenerate_seed=True)
 
     usm.see_the_game(save=True)
 

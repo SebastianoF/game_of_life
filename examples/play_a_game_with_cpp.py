@@ -1,5 +1,7 @@
-import sys
-import os
+import sys, os
+import numpy as np
+
+from src.core.python_source.game_manager import GameManager
 
 
 if __name__ == "__main__":
@@ -12,11 +14,37 @@ if __name__ == "__main__":
 
     import state_manager
 
+    game_name = 'cpp_game_name'
+    path_to_game_folder = os.path.join(project_path, 'data')
+    time_points = 10
 
     sm_cpp = state_manager.StateManager()
 
-    print sm_cpp.path_to_game_folder
-    print sm_cpp.game_name
+    print "\nv: Path and game name are not initialized: "
+    print "path: " + sm_cpp.path_to_game_folder
+    print "name: " + sm_cpp.game_name
 
-    sm_cpp.update_state(5)
+    # initialise the path and the game name
+    sm_cpp.path_to_game_folder = path_to_game_folder
+    sm_cpp.game_name = "cpp_game_name"
+    print "\nv: Path and game name are now initialized to the data folder in the project: "
+    print "path: " + sm_cpp.path_to_game_folder
+    print "name: " + sm_cpp.game_name
 
+    # produce a seed with the python state manager
+    sm_py = GameManager(path_to_game_folder=path_to_game_folder, game_name=game_name)
+    sm_py.erase_the_game(erase_seed=False, safe_erase=False)
+    sm_py.max_update_time = time_points
+
+    m_0 = np.zeros([20, 20], dtype=np.uint8)
+    m_0[2,2], m_0[3, 3], m_0[4, 1], m_0[4, 2], m_0[4, 3] = [1] * 5
+
+    sm_py.saver(m_0, 0)
+
+    # update one step the seed with cpp:
+    for t in range(time_points):
+        sm_cpp.update_state_once(t)
+
+    #sm_cpp.update_state_once(1)
+
+    sm_py.see_the_game()
