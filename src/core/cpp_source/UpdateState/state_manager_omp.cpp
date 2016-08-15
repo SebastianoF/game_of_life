@@ -30,18 +30,17 @@ int positive_modulo(int i, int n) {
 int cell_degree(int i, int j, int x_dim, int y_dim, Eigen::MatrixXi state_arr) {
     
     int a = 0;
-    #pragma omp parallel num_threads(3)
-    {
-        int row = omp_get_thread_num() -1;   
-        for (int col=-1; col<=1; col++){
-            if ( col != 0 || row != 0 ) {
-                #pragma omp critical 
-                a = a + state_arr(positive_modulo(row+i,x_dim), positive_modulo(col+j,y_dim));
+
+    for (int x=-1; x<=1; x++){
+        for (int y=-1; y<=1; y++) {
+            if ( x != 0 || y != 0 ) {
+                a = a + state_arr(positive_modulo(x+i,x_dim), positive_modulo(y+j,y_dim));
             }
         }
     }
     return a;
 }
+
 
 
 class StateManager
@@ -132,67 +131,33 @@ class StateManager
             file.close();
         }
 
-        // update state from array - plain version: 
+        // update state from array - very naife parallelisation: 
 
-        void update_from_array(Eigen::MatrixXi state_arr, 
-                               Eigen::MatrixXi & deg_arr,
-                               Eigen::MatrixXi & new_state_arr, 
-                               int x_dim,
-                               int y_dim
-                              ) 
-        {
+        Eigen::MatrixXi update_from_array(Eigen::MatrixXi state_arr) {
             
-            int region = omp_get_thread_num();
+            int x_dim = state_arr.rows(), 
+                y_dim = state_arr.cols();
 
-            int i_start, i_end, j_start, j_end;
+            Eigen::MatrixXi deg_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
+            Eigen::MatrixXi new_state_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
 
-            if (region == 0) {
-                i_start = 0;
-                i_end   = x_dim/2;
-                j_start = 0;
-                j_end   = y_dim/2;
-            } else if (region == 1) {
-                i_start = 0;
-                i_end   = x_dim/2;
-                j_start = y_dim/2;
-                j_end   = y_dim;
-            } else if (region == 2) {
-                i_start = x_dim/2;
-                i_end   = x_dim;
-                j_start = 0;
-                j_end   = y_dim/2;
-            } else if (region == 3){
-                i_start = x_dim/2;
-                i_end   = x_dim;
-                j_start = y_dim/2;
-                j_end   = y_dim;
-            }
-
-            std::cout << "spam" << std::endl;
-
-            for(int i=i_start; i < i_end; i++) {
-                for(int j=j_start; j < j_end; j++){
+            #pragma omp parallel for
+            for(int i=0; i < x_dim; i++) {
+                for(int j=0; j < y_dim; j++){
                     deg_arr(i, j) = cell_degree(i, j, x_dim, y_dim, state_arr);
                 }
             }
-            #pragma omp critical 
-            {
-            std::cout << "\n deg array:" << std::endl;
-            std::cout << deg_arr << std::endl;
-            }
-            for(int i=i_start; i<i_end; i++) {
-                for(int j=j_start; j<j_end; j++){
+            #pragma omp parallel for
+            for(int i = 0; i<x_dim; i++) {
+                for(int j = 0; j<y_dim; j++){
                     if (state_arr(i, j) == 1 && deg_arr(i, j) >= 2 && deg_arr(i, j) <= 3) // cell is alive and survives
                         new_state_arr(i, j) = 1;
                     if (state_arr(i, j) == 0 && deg_arr(i, j) == 3) // cell is dead and is the beloved of other 3 cells
                         new_state_arr(i, j) = 1;
                 }
             }
-            #pragma omp critical 
-            {
-            std::cout << "\n new state array:" << std::endl;
-            std::cout << new_state_arr << std::endl;
-        }
+
+            return new_state_arr;
         }
 
         // update state once:
@@ -205,19 +170,9 @@ class StateManager
             // load state
             input_state = loader(in_time);
 
-            int x_dim = input_state.rows(), 
-                y_dim = input_state.cols();
+            // update from array
+            new_state = update_from_array(input_state);
 
-            Eigen::MatrixXi deg_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
-            Eigen::MatrixXi new_state_arr = Eigen::MatrixXi::Zero(x_dim, y_dim);
-
-            #pragma omp parallel num_threads(4)
-            {
-                // update from array in parallel
-                update_from_array(input_state, deg_arr, new_state_arr, x_dim, y_dim);
-            }
-            
-            
             //save
             saver(new_state, in_time + 1);
 

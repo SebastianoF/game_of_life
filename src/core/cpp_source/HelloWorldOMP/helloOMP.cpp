@@ -24,3 +24,5 @@ BOOST_PYTHON_MODULE(helloOMP)
     using namespace boost::python;
     def("greetOMP", greetOMP);
 }
+
+// #pragma omp parallel for
