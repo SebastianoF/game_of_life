@@ -99,7 +99,7 @@ class GameManager(StateManager):
                     else:
                         os.remove(os.path.join(self.path_to_game_folder, name_state))
 
-            print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
+            #print 'Game in the folder ' + self.path_to_game_folder + ' named ' + self.game_name + ' has been erased.'
 
         else:
             print 'input not understood, game not erased. Please write y or n next time.'

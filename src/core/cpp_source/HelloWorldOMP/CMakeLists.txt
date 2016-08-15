@@ -1,0 +1,1 @@
+PYTHON_ADD_MODULE(helloOMP helloOMP.cpp)

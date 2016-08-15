@@ -1,3 +1,7 @@
+#brew install clang-omp
+# run with CC=clang-omp CXX=clang-omp++ cmake ../cpp_source/
+# than make
+
 cmake_minimum_required(VERSION 2.8.3)
 
 set(PROJECT_NAME "game_of_life")
@@ -30,9 +34,18 @@ ENABLE_TESTING()
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 LINK_LIBRARIES(${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
+# Add openmp
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+
 
 # Add subdirectories
 
 ADD_SUBDIRECTORY(HelloWorld)
+ADD_SUBDIRECTORY(HelloWorldOMP)
 ADD_SUBDIRECTORY(HelloBox)
 ADD_SUBDIRECTORY(UpdateState)

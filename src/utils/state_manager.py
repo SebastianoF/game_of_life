@@ -65,7 +65,7 @@ class StateManager(object):
         """
         st = np.random.choice([0, 1], size=(dim_x, dim_y), p=[1 - ones_percentage, ones_percentage])
         st = st.astype(np.uint8)
-        print('Random state generated.')
+        #print('Random state generated.')
         self.saver(st, time_state=0)
 
     def see_the_state(self, time_state):

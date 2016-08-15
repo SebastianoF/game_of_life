@@ -12,14 +12,14 @@ if __name__ == "__main__":
     cpp_update_state_code = os.path.join(project_path, 'src/core/cpp_build/UpdateState')
     sys.path.insert(0, cpp_update_state_code)
 
-    import state_manager
+    import state_manager_omp
 
     game_name = 'game_name'
     path_to_game_folder = os.path.join(project_path, 'data')
     time_points = 10
 
     # initialize the state manager written in cpp:
-    sm_cpp = state_manager.StateManager()
+    sm_cpp = state_manager_omp.StateManager()
 
     print "\nv: Path and game name are not initialized: "
     print "path: " + sm_cpp.path_to_game_folder

@@ -2,8 +2,7 @@
 Hello world module to check if the libraries are all in place and the wrappers
 of boost:::python are working.
 """
-import sys
-import os
+import sys, os
 
 
 if __name__ == "__main__":
