@@ -6,7 +6,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from src.utils.state_manager import StateManager
+from src.core.python_source.state_manager import StateManager
 from src.utils.aux_functions import cell_degree
 
 

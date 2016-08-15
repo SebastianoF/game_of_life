@@ -66,3 +66,5 @@ def test_still_life_block_in_1_time_step_cpp_omp():
 
     # clean the game from data:
     usm.erase_the_game(erase_seed=False, safe_erase=False)
+
+test_still_life_block_in_1_time_step_cpp_omp()

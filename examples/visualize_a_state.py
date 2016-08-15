@@ -1,6 +1,6 @@
 import os
 
-from src.utils.state_manager import StateManager
+from src.core.python_source.state_manager import StateManager
 
 
 if __name__ == "__main__":

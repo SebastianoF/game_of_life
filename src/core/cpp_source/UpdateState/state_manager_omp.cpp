@@ -16,7 +16,13 @@ Tests are provided in the Python embedding, and performed with nosetests.
 #include <iostream>
 #include <Eigen/Dense>
 
-#include <omp.h>
+#if defined(ENABLE_OPENMP)
+    #include <omp.h>
+#else
+    typedef int omp_int_t;
+    inline omp_int_t omp_get_thread_num() { return 0;}
+    inline omp_int_t omp_get_max_threads() { return 1;}
+#endif
 
 #define MAXBUFSIZE  ((int) 1e6)
 
