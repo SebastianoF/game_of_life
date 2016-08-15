@@ -43,7 +43,7 @@ int cell_degree(int i, int j, int x_dim, int y_dim, Eigen::MatrixXi state_arr) {
 
 
 
-class StateManager
+class StateManagerOMP
 {
     private:
         std::string m_path_to_game_folder;
@@ -53,7 +53,7 @@ class StateManager
 
         // constructors:
 
-        StateManager() {
+        StateManagerOMP() {
             m_path_to_game_folder = "Path not defined.";
             m_game_name = "Game name not defined.";
         }
@@ -111,6 +111,7 @@ class StateManager
             rows--;
 
             Eigen::MatrixXi result(rows, cols);
+            #pragma omp parallel for
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
                     result(i,j) = buff[cols * i + j];
@@ -186,13 +187,13 @@ using namespace boost::python;
 
 BOOST_PYTHON_MODULE(state_manager_omp)
 {
-    class_<StateManager>("StateManager", init<>())
-        .add_property("path_to_game_folder", &StateManager::get_path_to_game_folder, &StateManager::set_path_to_game_folder)
-        .add_property("game_name", &StateManager::get_game_name, &StateManager::set_game_name)
-        .def("update_state_once", &StateManager::update_state_once)
-        .def("update_from_array", &StateManager::update_from_array)
-        .def("loader", &StateManager::loader)
-        .def("saver", &StateManager::saver)
+    class_<StateManagerOMP>("StateManagerOMP", init<>())
+        .add_property("path_to_game_folder", &StateManagerOMP::get_path_to_game_folder, &StateManagerOMP::set_path_to_game_folder)
+        .add_property("game_name", &StateManagerOMP::get_game_name, &StateManagerOMP::set_game_name)
+        .def("update_state_once", &StateManagerOMP::update_state_once)
+        .def("update_from_array", &StateManagerOMP::update_from_array)
+        .def("loader", &StateManagerOMP::loader)
+        .def("saver", &StateManagerOMP::saver)
         ;
 
 }

@@ -6,6 +6,7 @@
 \usepackage{verbatim} 
 \usepackage{subfigure}
 \usepackage{amsfonts}
+\usepackage{hyperref}
 %\usepackage{tikz}
 
 
@@ -92,13 +93,40 @@
 
 
 \begin{center}
-	\color{MidnightBlue} {\Large Part 1: Introducing the Game }\color{Black} 
+	\color{MidnightBlue} {\Large Introducing the Game }\color{Black} 
 \end{center}
 
+\noindent
+\href{https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life}{Conway's Game of Life} is a deterministic evolutionary discrete event dynamical system played on an infinite 2-dimensional grid.
+At each position of the gird there is a cell, that can be in two states: \emph{alive} 1, or \emph{dead} 0.
+The state of cell $C$ at time $t$, indicated with $\text{state}_t(C)$ evolves over a discrete time according to its degree. The degree of a cell, $\text{deg}_t(C)$ is the number of alive cells into its eight neigbours, and the evolution model from the state $t$ to the state $t+1$ happens according to the following rules, called update rule, applied simultaneously for all the cells in the grid for a given time-state:
+\begin{enumerate}
+	\item $\text{state}_t(C) = 1$ and $\text{deg}_t(C)<2$ then $\text{state}_{t+1}(C) = 0$.
+	\item $\text{state}_t(C) = 1$ and $2 \leq\text{deg}_t(C) \leq 3$ then $\text{state}_{t+1}(C) = 1$.
+	\item $\text{state}_t(C) = 1$ and $\text{deg}_t(C)>3$ then $\text{state}_{t+1}(C) = 0$.
+	\item $\text{state}_t(C) = 0$ and $\text{deg}_t(C)=3$ then $\text{state}_{t+1}(C) = 1$.
+\end{enumerate}
+The initial state is called \emph{seed}, and it completely determines the subsequent steps of the game.
 
 \begin{center}
 	\color{MidnightBlue} {\Large Part 1: Serial Solution }\color{Black} 
 \end{center}
+
+\noindent
+In the simple implementation here proposed, a \emph{state} is represented by a \emph{.txt} file that contains a binary matrix whose zeros represents the dead cells and ones represents the living cells. A \emph{game}, in the perspective here proposed, is a sequence of $.txt$ file where in the filename appears the name of the game, shared for each state, and an integer time parameter, starting from $0$ for the seed. Two states with consecutive indexes are related to each others by the update rule.
+Given the need of plotting computing statistics for computational comparisons purposes and of obtaining an animation of a game (see the README.md on github \href{https://github.com/SebastianoF/game_of_life}{repository}), I opted for wrapping the C++ code inside python with boost::python, and to call the shared object (.so) generated with the C++ compiler as libraries inside python code. \\
+
+\noindent
+\color{MidnightBlue} {\Large Design and code structure }\color{Black}  \\
+The object oriented structure is driven by the definition of state and game. To reduce computational costs and the length of the code, there is no class implemented for a state or a game, being structured .txt files. The classes are implemented for the operations between states, as well as to create random seeds, visualize state and games.
+
+The object oriented structure for the Python code is given by the following classes:
+
+
+While the C++ code, called as a library in the python code, has the structure:
+
+
+Folders:
 
 
 %\begin{figure}[htbp]
@@ -117,45 +145,24 @@
 
 
 \begin{center}
-	\color{MidnightBlue} {\Large Part 2: Remote computation }\color{Black} 
+	\color{MidnightBlue} {\Large Part 2: Parallel computation - OpenMP }\color{Black} 
 \end{center}
 
 
 qsub command here!
 
-
 \begin{center}
-	\color{MidnightBlue} {\Large Part 3: Shared memory parallelism }\color{Black} 
+	\color{MidnightBlue} {\Large Part 2: Remote computation - OpenMP }\color{Black} 
 \end{center}
 
 
 
-\begin{center}
-	\color{MidnightBlue} {\Large Part 4: Distributed memory parallelism }\color{Black} 
-\end{center}
 
 
 
-\begin{center}
-	\color{MidnightBlue} {\Large Part 5: Accelerated Solution }\color{Black} 
-\end{center}
-
-\begin{center}
-	\color{MidnightBlue} {\Large Extra: between life and dead - a fuzzy game of life }\color{Black} 
-\end{center}
-
-\newpage
-\begin{thebibliography}{2}
-	
-	\bibitem{ahb_algo}
-	Arun, K. Somani, Thomas S. Huang, and Steven D. Blostein. "Least-squares fitting of two 3-D point sets." IEEE Transactions on pattern analysis and machine intelligence 5 (1987): 698-700.
-	
-	\bibitem{bmk_algo}
-	Besl, Paul J., and Neil D. McKay. "Method for registration of 3-D shapes." Robotics-DL tentative. International Society for Optics and Photonics, 1992.
-	
-	\bibitem{cho_algo}
-	Cho, Youngsang, et al. "A multi-resolution scheme for distortion-minimizing mapping between human subcortical structures based on geodesic construction on Riemannian manifolds." Neuroimage 57.4 (2011): 1376-1392.	
-\end{thebibliography}
+\vspace{1cm}
+\noindent
+Please see the link include in the README.md on the github \href{https://github.com/SebastianoF/game_of_life}{repository} for references.
 \end{document}
 
 

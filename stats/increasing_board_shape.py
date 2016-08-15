@@ -18,6 +18,7 @@ if __name__ == "__main__":
     sys.path.insert(0, cpp_update_state_code)
 
     import state_manager  # cpp
+    import state_manager_omp  # cpp openMP
 
     ##############
     # Parameters #
@@ -27,9 +28,9 @@ if __name__ == "__main__":
     path_to_game_folder = os.path.join(project_path, 'data')
     time_points = 30
 
-    shape_dimensions = [(i, j) for i, j in zip(range(10, 80, 5), range(10, 80, 5))]
-    core_methods = 2  # python and cpp for the moment
-    num_samples_each_shape = 20
+    shape_dimensions = [(i, j) for i, j in zip(range(10, 86, 5), range(10, 86, 5))]
+    core_methods = 3  # python, cpp, cpp openMP for the moment
+    num_samples_each_shape = 10
 
     #########################
     # Output data structure #
@@ -43,14 +44,18 @@ if __name__ == "__main__":
     # game manager creation #
     #########################
 
-    # create two game manager, one with python, one with the plain version of cpp
+    # create the game managers, one with python, one with the plain version of cpp
+
+    gm_py = GameManager(path_to_game_folder=path_to_game_folder, game_name=game_name)
+    gm_py.max_update_time = time_points
 
     sm_cpp = state_manager.StateManager()
     sm_cpp.path_to_game_folder = path_to_game_folder
     sm_cpp.game_name = game_name
 
-    gm_py = GameManager(path_to_game_folder=path_to_game_folder, game_name=game_name)
-    gm_py.max_update_time = time_points
+    sm_cpp_omp = state_manager_omp.StateManagerOMP()
+    sm_cpp_omp.path_to_game_folder = path_to_game_folder
+    sm_cpp_omp.game_name = game_name
 
     ######################
     # Collect statistics #
@@ -74,12 +79,17 @@ if __name__ == "__main__":
                 # compute new state with python
                 start_py = time.time()
                 new_state_arr_py = gm_py.update_state_once(t)
-                time_data[shape_index, 0, s] = (time.time() - start_py)
+                time_data[shape_index, 0, s] += (time.time() - start_py)
 
                 # compute new state with cpp
                 start_cpp = time.time()
                 new_state_arr_cpp = sm_cpp.update_state_once(t)
-                time_data[shape_index, 1, s] = (time.time() - start_cpp)
+                time_data[shape_index, 1, s] += (time.time() - start_cpp)
+
+                # compute new state with cpp OMP
+                start_cpp = time.time()
+                new_state_arr_cpp_omp = sm_cpp_omp.update_state_once(t)
+                time_data[shape_index, 2, s] += (time.time() - start_cpp)
 
     # Erase again for the last game
     gm_py.erase_the_game(erase_seed=True, safe_erase=False, erase_movie=True)

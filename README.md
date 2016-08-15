@@ -1,20 +1,19 @@
 # boost::python-based Conway's game of life implementation
 
-Here is an **IN PROGRESS** possible implementation of the Conway's game of life.
-Aim of the code is to compare the performance between different implementation of the code at the core of Game of Life in C++ and python.
+An exercise where a possible implementation of the Conway's game of life is proposed.
+Aim of the code is to compare the performance between different implementation at the core of Game of Life in C++ and C++ with OpenMP.
 
-Useful links are:
+Useful material can be found there:
  
 + [Game of life theory, from wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 + [C++ advanced programming for research, from UCL](http://rits.github-pages.ucl.ac.uk/research-computing-with-cpp/)
-+ [Catch.hpp test framework for the C++ code](http://baptiste-wicht.com/posts/2014/07/catch-powerful-yet-simple-cpp-test-framework.html)
 + [Nosetest unit test for the Python code](http://pythontesting.net/framework/nose/nose-introduction/)
 + [Guide to install boost::python] (http://www.pyimagesearch.com/2015/04/27/installing-boost-and-boost-python-on-osx-with-homebrew/)
 + [Python documentation boost.python](https://wiki.python.org/moin/boost.python)
 + [Tutorial for boost::python from Joel de Guzman](http://www.boost.org/doc/libs/1_46_1/libs/python/doc/tutorial/doc/html/index.html "Boost.Python tutorial").
 + [Really cool additional tutorial for boost::python from github, authored by Alchimh3011](https://github.com/TNG/boost-python-examples)
 + [Alternative implementaiton of game of life with analogous aims and with a very detailed C++ object oriented structure from github, authored by Michael Ebner](https://github.com/renbem/RCCPP-coursework02)
-
++ [Another alternative implementation of game of life from Github authored Luis Herrera](https://github.com/luiscarlosgph/game-of-life)
 
 # Prerequisites
 
@@ -27,9 +26,10 @@ Useful links are:
 
 ### Mac OS X with [homebrew](http://brew.sh)
 
-To install with homebrew the package boost python: 
+To install with homebrew the package boost python and openMP for clang: 
 
-+ `brew install cmake boost-python`
+    `brew install cmake boost-python`
+    brew install clang-omp
 
 The full path to the the homebrew python lib must be manually provided:
 
@@ -59,7 +59,7 @@ Under
 create the folder cpp_build, then 
 
     cd /cd/src/core/cpp_build
-    ccmake ../cpp_source
+    CC=clang-omp CXX=clang-omp++ cmake ../cpp_source/
 
 in cmake, configure and generate the source code, then quit and
 
