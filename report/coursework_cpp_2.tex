@@ -108,6 +108,14 @@ The state of cell $C$ at time $t$, indicated with $\text{state}_t(C)$ evolves ov
 \end{enumerate}
 The initial state is called \emph{seed}, and it completely determines the subsequent steps of the game.
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.45]{figures/uml_py.pdf}
+	\caption{UML diagram representing the structure proposed for the StateManager and the GameManager classes implemented in python.}
+	\label{fig:uml_py}
+\end{figure}
+
+
 \begin{center}
 	\color{MidnightBlue} {\Large Part 1: Serial Solution }\color{Black} 
 \end{center}
@@ -118,15 +126,28 @@ Given the need of plotting computing statistics for computational comparisons pu
 
 \noindent
 \color{MidnightBlue} {\Large Design and code structure }\color{Black}  \\
-The object oriented structure is driven by the definition of state and game. To reduce computational costs and the length of the code, there is no class implemented for a state or a game, being structured .txt files. The classes are implemented for the operations between states, as well as to create random seeds, visualize state and games.
+The object oriented structure is driven by the definition of state and game. To reduce computational costs and the length of the code, there is no class implemented for a state or a game, being structured .txt files. The classes are implemented for the operations between states, as well as to create random seeds, visualize states and games.
 
-The object oriented structure for the Python code is given by the following classes:
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.45]{figures/uml_cpp.pdf}
+	\caption{UML diagram representing the structure proposed for the StateManager and the GameManager classes implemented in C++.}
+	\label{fig:uml_cpp}
+\end{figure}
 
-
-While the C++ code, called as a library in the python code, has the structure:
-
-
-Folders:
+\noindent
+The folder structure is organized as follows:
+\begin{itemize}
+	\item[{\bf examples}] - contains some hello-world style examples and some code to create games of life, from random seeds and from seeds created ad hoc.
+	\item[{\bf report}] contains this report and the figures produced with statistical methods.
+	\item[{\bf src}] is divided into
+	\begin{itemize}
+		\item[{\bf core}]
+		\item fdsa
+	\end{itemize}
+	\item[{\bf stats}] Contains the methods that produced the statistical results.
+	\item[{\bf test}] has the tests, performed with the library Nosetest. The C++ code is tested here as well, in its main functions.
+\end{itemize}
 
 
 %\begin{figure}[htbp]

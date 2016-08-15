@@ -5,10 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-def plot_a_frame(arr):
-    pass
-
-
 def plot_a_sequence_of_images(list_arr):
     """
     :param list_arr: list of 2d arrays of the same dimension

@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     # Path settings - compatible with stats methods.
 
-    dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     project_path = os.path.split(dir_path)[0]
     path_to_game_folder = os.path.join(project_path, 'data')
     path_to_saved_data = os.path.join(path_to_game_folder, 'data_increasing_board2.npy')
